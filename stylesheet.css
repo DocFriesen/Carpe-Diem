@@ -1,6 +1,23 @@
+h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0;
+}
+
 .header-row {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
+
+    background-image: url('images/MountainBG.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 25vh;
+}
+
+.header-center {
+    align-self: center;
 }
 
 .top-section {
