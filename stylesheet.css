@@ -86,7 +86,9 @@ h1 {
 }
 
 .tasks-section {
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
 }
 
 .schedule-section {
@@ -96,7 +98,9 @@ h1 {
 }
 
 .blocks-section {
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
 }
 
 /* Review Section */
