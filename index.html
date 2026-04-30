@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="stylesheet.css" />
     <title>Carpe Diem</title>
+    <script src="script.js" defer></script>
 </head>
+
+<!-- Header Section -->
+
 <body>
     <header class="header-row">
         <div class="header-left">
@@ -41,7 +45,9 @@
         </div>
     </header>
 
-    <section class="dashboard"> 
+<!-- Dashboard Section -->
+
+    <section class="dashboard card"> 
         <div class="left-dashboard card">
             <div class="left-dashboard-title title">
                 <p><strong>Completion Stats</strong></p>
@@ -70,25 +76,27 @@
         </div>
     </section>
 
+<!-- Schedule Section -->
+
     <section class="main-section card">
         <div class="tasks-section card">
             <div class="tasks-section-title">
                 <div class="tasks-title">
-                Tasks
+                <a href="/tasks">Tasks</a>
                </div>
             </div>
             <div class="tasks-table">
-                tasks table goes here
+                <div class="task-item card">Task Item</div>
+                <div class="task-item card">Task Item</div>
+                <div class="task-item card">Task Item</div>
+                <div class="task-item card">Task Item</div>
+                <div class="task-item card">Task Item</div>
             </div>
         </div>
         <div class="schedule-section card">
             <div class="schedule-section-title">
-                <div class="day">
-                    Today
-                </div>
-                <div class="time">
-                    time here
-                </div>
+                <div id="day" class="day"></div>
+                <div id="current-time" class="current-time"></div>
             </div>
             <div class="schedule-table">
                 <div class="schedule-item card">Schedule Item</div>
@@ -101,14 +109,21 @@
         <div class="blocks-section card">
             <div class="block-section-title">
                <div class="block-title">
-                Blocks
+                <a href="/blocks">Blocks</a>
                </div>
             </div>
             <div class="block-table">
-                blocks goes here
+                <div class="block-item card">Block Item</div>
+                <div class="block-item card">Block Item</div>
+                <div class="block-item card">Block Item</div>
+                <div class="block-item card">Block Item</div>
+                <div class="block-item card">Block Item</div>
             </div>
         </div>
     </section>  
+
+
+<!-- Review Section -->
 
     <section class="review-section card">
         <div class="review-section-title title">
