@@ -7,6 +7,10 @@ h1 {
 }
 
 /* Header Section */
+.icon {
+    width: 32px;
+    height: 32px;
+}
 
 .header-row {
     display:grid;
@@ -17,7 +21,7 @@ h1 {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    min-height: 20vh;
+    min-height: 15vh;
 }
 
 .header-left {
@@ -45,7 +49,7 @@ h1 {
     display:grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    min-height: 20vh;
+    min-height: 15vh;
 }
 
 .left-dashboard {
@@ -65,10 +69,12 @@ h1 {
 
 .day {
     justify-self: center;
+    padding: 0.5rem;
 }
 
-.time {
+.current-time {
     justify-self: center;
+    padding: 0.5rem;
 }
 
 .card   {
@@ -97,8 +103,14 @@ h1 {
 
 .schedule-section {
     display: flex;
-    flex-direction: column;
-    align-items: center;    
+    flex-direction: column;    
+}
+
+.schedule-segment {
+    flex:1;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 1px 1px 5px 5px bisque;
 }
 
 .blocks-section {
