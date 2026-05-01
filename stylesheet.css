@@ -119,6 +119,14 @@ h1 {
     align-items: center;    
 }
 
+.drag-item:hover {
+    cursor: grab;
+}
+
+.drag-item:active {
+    cursor: grabbing;
+}
+
 /* Review Section */
 .review-section {
     display: flex;
