@@ -77,7 +77,13 @@ function saveState() {
 // Load placedItems from localStorage
 function loadState() {
     const saved = localStorage.getItem(STORAGE_KEY);
-    placedItems = saved ? JSON.parse(saved) : [];
+    
+    try {
+        placedItems = saved ? JSON.parse(saved) : [];
+    } catch (error) {
+        console.error("Failed to parse saved state:", error);
+        placedItems = [];
+    }
 }
 
 // Remove all saved data from localStorage and clears state
