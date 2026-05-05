@@ -30,11 +30,28 @@ function updateTime() {
 updateTime();
 setInterval(updateTime, 1000);
 
-// Drag and drop functionality
+// Load app state + drag and drop functionality
 
+
+// Key for localStorage
+const STORAGE_KEY = "dragDemoItems";
 
 // Store the element currently dragged
 let draggedElement = null;
+
+// This array is the app state.
+let placedItems = [];
+
+function init() {
+    // Make all source items draggable
+    const sourceItems = document.querySelectorAll("#source-panel .drag-item");
+    sourceItems.forEach(makeDraggable);
+
+    loadState();
+    renderPlacedItems();
+    setupDropZones();
+    setupClearButton();
+}
 
 // Makes an element draggable with event listeners
 function makeDraggable(element) {
@@ -47,8 +64,31 @@ function makeDraggable(element) {
     });
 }
 
-// Create a remove button for cloned items
-function createRemoveButton(clone) {
+// Create a unique ID for each new clone
+function generateID() {
+    return "item-" + Date.now() + "-" + Math.floor(Math.random() * 100000);
+}
+
+// Save placedItems to localStorage
+function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(placedItems));
+}
+
+// Load placedItems from localStorage
+function loadState() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    placedItems = saved ? JSON.parse(saved) : [];
+}
+
+// Remove all saved data from localStorage and clears state
+function clearState() {
+    placedItems = [];
+    localStorage.removeItem(STORAGE_KEY);
+    renderPlacedItems();
+}
+
+// Create a remove button that eliminates clone from app state, saves new state, and re-renders
+function createRemoveButton(itemId) {
     const button = document.createElement("button");
     button.textContent = "x";
     button.className = "remove-btn";
@@ -57,65 +97,113 @@ function createRemoveButton(clone) {
     button.addEventListener("click", function (event) {
         //prevent any weird drag/click interaction
         event.stopPropagation();
-        clone.remove();
+
+        placedItems = placedItems.filter((item) => item.id !== itemId);
+        saveState();
+        renderPlacedItems();
     });
 
     return button;
 }
 
 // Create a new draggable clone
-function createCloneFromItem(item) {
+function createCloneElement(itemData) {
     const clone = document.createElement("div");
 
-    clone.className = item.className + " dropped-clone";
-    clone.textContent = item.dataset.label;
+    clone.className = `drag-item ${itemData.color} dropped-clone`;
+    clone.textContent = itemData.label;
     clone.draggable = true;
-    clone.dataset.label = item.dataset.label;
-    clone.dataset.color = item.dataset.color;
+    clone.dataset.id = itemData.id;
+    clone.dataset.label = itemData.label;
+    clone.dataset.color = itemData.color;
 
     makeDraggable(clone);
 
     // Add remove button to the clone
-    const removeButton = createRemoveButton(clone);
+    const removeButton = createRemoveButton(itemData.id);
     clone.appendChild(removeButton);
 
     return clone;
 }
 
-// Make all source items draggable
-const sourceItems = document.querySelectorAll(".drag-item");
-sourceItems.forEach(makeDraggable);
+// Clear all drop zones and rebuild from placedItems
+function renderPlacedItems() {
+    const allDropContents = document.querySelectorAll(".drop-zone .drop-content");
+
+    allDropContents.forEach((container) => {
+        container.innerHTML = "";
+    });
+
+    placedItems.forEach((item) => {
+        const targetContainer = document.querySelector(
+            `.drop-zone[data-zone="${item.zone}"] .drop-content`
+        );
+
+        if (!targetContainer) return;
+
+        const clone = createCloneElement(item);
+        targetContainer.appendChild(clone);
+    });
+}
 
 // Set up drop zones
-const dropZones = document.querySelectorAll(".drop-zone");
-const sourcePanel = document.getElementById("source-panel");
+function setupDropZones() {
+    const dropZones = document.querySelectorAll(".drop-zone");
+    const sourcePanel = document.getElementById("source-panel");
 
-dropZones.forEach((zone) => {
-    zone.addEventListener("dragover", function (event) {
-        // Allow dropping
-        event.preventDefault();
-        zone.classList.add("drag-over");
+    dropZones.forEach((zone) => {
+        zone.addEventListener("dragover", function (event) {
+            // Allow dropping
+            event.preventDefault();
+            zone.classList.add("drag-over");
+        });
+
+        zone.addEventListener("dragleave", function() {
+            zone.classList.remove("drag-over");
+        });
+
+        zone.addEventListener("drop", function (event) {
+            event.preventDefault();
+            zone.classList.remove("drag-over");
+
+            if (!draggedElement) return;
+
+            const zoneName = zone.dataset.zone;
+
+            //If dragged item comes from source panel, create a brand new clone in state
+            if (sourcePanel.contains(draggedElement)) {
+                const newItem = {
+                    id: generateID(),
+                    label: draggedElement.dataset.label,
+                    color: draggedElement.dataset.color,
+                    zone: zoneName
+                };
+
+                placedItems.push(newItem);
+            } else {
+                // otherwise update the existing clone's zone in state
+                const itemID = draggedElement.dataset.id;
+                const existingItem = placedItems.find((item) => item.id === itemId);
+
+                if (existingItem) {
+                    existingItem.zone = zoneName;
+                }
+            }
+
+            saveState();
+            renderPlacedItems();
+        });
     });
+}
 
-    zone.addEventListener("dragleave", function() {
-        zone.classList.remove("drag-over");
+//Set up Clear Button
+function setupClearButton() {
+    const clearButton = document.getElementById("clear-storage-btn");
+
+    clearButton.addEventListener("click", function () {
+        clearState();
     });
+}
 
-    zone.addEventListener("drop", function (event) {
-        event.preventDefault();
-        zone.classList.remove("drag-over");
-
-        if (!draggedElement) return;
-
-        const dropContent = zone.querySelector(".drop-content");
-
-        // If dragging from the source panel, create a clone
-        if (sourcePanel.contains(draggedElement)) {
-            const clone = createCloneFromItem(draggedElement);
-            dropContent.appendChild(clone);
-        } else {
-            // If dragging previously dropped clone, move it
-            dropContent.appendChild(draggedElement);
-        }
-    });
-});
+// Start the app
+init();

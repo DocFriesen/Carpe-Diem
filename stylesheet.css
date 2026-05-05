@@ -119,6 +119,8 @@ h1 {
     align-items: center;    
 }
 
+/* Dragged items */
+
 .drag-item:hover {
     cursor: grab;
 }
@@ -151,6 +153,23 @@ h1 {
 
 .remove-btn:hover {
     background: #ffe0e0;
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+#clear-storage-btn {
+    border: none;
+    background: #222;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#clear-storage-btn:hover {
+    background: #444;
 }
 
 /* Review Section */
