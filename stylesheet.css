@@ -127,6 +127,32 @@ h1 {
     cursor: grabbing;
 }
 
+.dropped-clone {
+    position: relative;
+    padding-right: 32 px;
+    cursor: none;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+    padding: 0;
+}
+
+.remove-btn:hover {
+    background: #ffe0e0;
+}
+
 /* Review Section */
 .review-section {
     display: flex;

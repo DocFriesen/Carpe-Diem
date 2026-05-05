@@ -47,17 +47,37 @@ function makeDraggable(element) {
     });
 }
 
+// Create a remove button for cloned items
+function createRemoveButton(clone) {
+    const button = document.createElement("button");
+    button.textContent = "x";
+    button.className = "remove-btn";
+    button.type = "button";
+
+    button.addEventListener("click", function (event) {
+        //prevent any weird drag/click interaction
+        event.stopPropagation();
+        clone.remove();
+    });
+
+    return button;
+}
+
 // Create a new draggable clone
 function createCloneFromItem(item) {
     const clone = document.createElement("div");
 
-    clone.className = item.className;
+    clone.className = item.className + " dropped-clone";
     clone.textContent = item.dataset.label;
     clone.draggable = true;
     clone.dataset.label = item.dataset.label;
     clone.dataset.color = item.dataset.color;
 
     makeDraggable(clone);
+
+    // Add remove button to the clone
+    const removeButton = createRemoveButton(clone);
+    clone.appendChild(removeButton);
 
     return clone;
 }
