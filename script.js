@@ -34,24 +34,33 @@ setInterval(updateTime, 1000);
 
 
 // Key for localStorage
-const STORAGE_KEY = "dragDemoItems";
+const STORAGE_KEY = "dragAppState";
 
 // Store the element currently dragged
 let draggedElement = null;
 
-// This array is the app state.
-let placedItems = [];
+// create appState as a single source of truth
+let appState = {
+    items: [],
+    zones: ["zone-a", "zone-b"]
+};
 
+
+// Initialize the application
 function init() {
-    // Make all source items draggable
-    const sourceItems = document.querySelectorAll("#source-panel .drag-item");
-    sourceItems.forEach(makeDraggable);
-
     loadState();
-    renderPlacedItems();
+    render();
+    setupSourceItems();
     setupDropZones();
     setupClearButton();
 }
+
+// Make all source items draggable
+function setupSourceItems() {
+    const sourceItems = document.querySelectorAll("#source-panel .drag-item");
+    sourceItems.forEach(makeDraggable);
+}
+
 
 // Makes an element draggable with event listeners
 function makeDraggable(element) {
@@ -69,28 +78,69 @@ function generateID() {
     return "item-" + Date.now() + "-" + Math.floor(Math.random() * 100000);
 }
 
-// Save placedItems to localStorage
+// Save current state to localStorage
 function saveState() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(placedItems));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
 }
 
-// Load placedItems from localStorage
+// Load appState from localStorage
 function loadState() {
     const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (!saved) return;
     
     try {
-        placedItems = saved ? JSON.parse(saved) : [];
+        const parsed = JSON.parse(saved);
+
+        appState = {
+            items: Array.isArray(parsed.items) ? parsed.items : [],
+            zones: Array.isArray(parsed.zones) ? parsed.zones : ["zone-a", "zone-b"]
+        };
     } catch (error) {
-        console.error("Failed to parse saved state:", error);
-        placedItems = [];
+        console.error("Failed to load saved app state:", error);
     }
 }
 
-// Remove all saved data from localStorage and clears state
+// Reset the app state
 function clearState() {
-    placedItems = [];
+    appState = {
+        items: [],
+        zones: ["zone-a", "zone-b"]
+    };
+
     localStorage.removeItem(STORAGE_KEY);
-    renderPlacedItems();
+    render();
+}
+
+// Add a new item to a drop zone
+function addItemToZone(label, color, zone) {
+    appState.items.push({
+        id: generateID(),
+        label,
+        color,
+        zone
+    });
+
+    saveState();
+    render();
+}
+
+// Move an existing item to a different zone
+function moveItemToZone(itemId, newZone) {
+    const item = appState.items.find((entry) => entry.id === itemId);
+
+    if (!item) return;
+
+    item.zone = newZone;
+    saveState();
+    render();
+}
+
+// Remove item from appState
+function removeItem(itemId) {
+    appState.items = appState.items.filter((item) => item.id !=== itemId);
+    saveState();
+    render();
 }
 
 // Create a remove button that eliminates clone from app state, saves new state, and re-renders
@@ -103,10 +153,7 @@ function createRemoveButton(itemId) {
     button.addEventListener("click", function (event) {
         //prevent any weird drag/click interaction
         event.stopPropagation();
-
-        placedItems = placedItems.filter((item) => item.id !== itemId);
-        saveState();
-        renderPlacedItems();
+        removeItem(itemId);
     });
 
     return button;
@@ -126,29 +173,28 @@ function createCloneElement(itemData) {
     makeDraggable(clone);
 
     // Add remove button to the clone
-    const removeButton = createRemoveButton(itemData.id);
-    clone.appendChild(removeButton);
+    clone.appendChild(createRemoveButton(itemData.id));
 
     return clone;
 }
 
-// Clear all drop zones and rebuild from placedItems
-function renderPlacedItems() {
-    const allDropContents = document.querySelectorAll(".drop-zone .drop-content");
+// Clear all drop zones and rebuild from appState
+function render() {
+    const containers = document.querySelectorAll(".drop-zone .drop-content");
 
-    allDropContents.forEach((container) => {
+    containers.forEach((container) => {
         container.innerHTML = "";
     });
 
-    placedItems.forEach((item) => {
-        const targetContainer = document.querySelector(
+    appState.items.forEach((item) => {
+        const target = document.querySelector(
             `.drop-zone[data-zone="${item.zone}"] .drop-content`
         );
 
-        if (!targetContainer) return;
+        if (!target) return;
 
         const clone = createCloneElement(item);
-        targetContainer.appendChild(clone);
+        target.appendChild(clone);
     });
 }
 
@@ -174,30 +220,19 @@ function setupDropZones() {
 
             if (!draggedElement) return;
 
-            const zoneName = zone.dataset.zone;
+            const targetZone = zone.dataset.zone;
 
-            //If dragged item comes from source panel, create a brand new clone in state
+            //If dragged item comes from source panel, create a new state item
             if (sourcePanel.contains(draggedElement)) {
-                const newItem = {
-                    id: generateID(),
-                    label: draggedElement.dataset.label,
-                    color: draggedElement.dataset.color,
-                    zone: zoneName
-                };
-
-                placedItems.push(newItem);
+                addItemToZone(
+                    draggedElement.dataset.label,
+                    draggedElement.dataset.color,
+                    targetZone
+                );
             } else {
-                // otherwise update the existing clone's zone in state
-                const itemID = draggedElement.dataset.id;
-                const existingItem = placedItems.find((item) => item.id === itemId);
-
-                if (existingItem) {
-                    existingItem.zone = zoneName;
-                }
+                // if dragged from a drop zone, move the existing item in state
+                moveItemToZone(draggedElement.dataset.id, targetZone);
             }
-
-            saveState();
-            renderPlacedItems();
         });
     });
 }
