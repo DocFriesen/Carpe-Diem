@@ -30,8 +30,9 @@ function updateTime() {
 updateTime();
 setInterval(updateTime, 1000);
 
-// Load app state + drag and drop functionality
+// =======================================================================================================================================================================
 
+// Load app state + drag and drop functionality
 
 // Key for localStorage
 const STORAGE_KEY = "dragAppState";
@@ -138,7 +139,7 @@ function moveItemToZone(itemId, newZone) {
 
 // Remove item from appState
 function removeItem(itemId) {
-    appState.items = appState.items.filter((item) => item.id !=== itemId);
+    appState.items = appState.items.filter((item) => item.id !== itemId);
     saveState();
     render();
 }
