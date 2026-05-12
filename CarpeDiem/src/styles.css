@@ -1,0 +1,46 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    color: #222;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.app-shell {
+    padding: 20px;
+}
+
+.app-header {
+    margin-bottom: 24px;
+}
+
+.app-title {
+    margin: 0 0 12px;
+}
+
+.app-nav {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 400;
+}
+
+.nav-link.active {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.page-content {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 300px;
+}
