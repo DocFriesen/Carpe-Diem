@@ -44,3 +44,56 @@ body {
     padding: 20px;
     min-height: 300px;
 }
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.weekly-progress {
+    justify-items: center;
+    border: 2px solid lightgray;
+    border-radius: 16px;
+    margin: 2px;
+}
+
+.roadmap-progress {
+    justify-items: center;
+    border: 2px solid lightgray;
+    border-radius: 16px;
+    margin: 2px;
+}
+
+.completion-progress {
+    justify-items: center;
+    border: 2px solid lightgray;
+    border-radius: 16px;
+    margin: 2px;
+}
+
+.schedule-section {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+.template-panel {
+    justify-items: center;
+    border: 2px solid lightgray;
+    border-radius: 16px;
+    margin: 2px;
+}
+
+.schedule-title {
+    justify-self: center;
+}
+
+.schedule {
+    border: 2px solid lightgray;
+    border-radius: 16px;
+    margin: 2px;
+}
+
+.schedule-rows {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+}
