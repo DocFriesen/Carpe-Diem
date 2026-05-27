@@ -27,6 +27,12 @@ body {
     flex-wrap: wrap;
 }
 
+.card {
+    border: 2px solid lightgray;
+    border-radius: 16px;
+    margin: 2px;
+}
+
 .nav-link {
     text-decoration: none;
     color: #333;
@@ -52,23 +58,14 @@ body {
 
 .weekly-progress {
     justify-items: center;
-    border: 2px solid lightgray;
-    border-radius: 16px;
-    margin: 2px;
 }
 
 .roadmap-progress {
     justify-items: center;
-    border: 2px solid lightgray;
-    border-radius: 16px;
-    margin: 2px;
 }
 
 .completion-progress {
     justify-items: center;
-    border: 2px solid lightgray;
-    border-radius: 16px;
-    margin: 2px;
 }
 
 .schedule-section {
@@ -78,22 +75,17 @@ body {
 
 .template-panel {
     justify-items: center;
-    border: 2px solid lightgray;
-    border-radius: 16px;
-    margin: 2px;
 }
 
 .schedule-title {
     justify-self: center;
 }
 
-.schedule {
-    border: 2px solid lightgray;
-    border-radius: 16px;
-    margin: 2px;
+.schedule-rows {
+    padding: 10px;   
 }
 
-.schedule-rows {
+.schedule-item {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
 }
